@@ -1,22 +1,39 @@
+import { useEffect, useState } from 'react';
 import './App.css';
 
 function App() {
+
+  const [data, setData] = useState([])
+
+  useEffect(()=> {
+    fetch('http://localhost:3000/static/shoes.json')
+    .then((response)=>response.json())
+    .then(setData)
+  }, [])
+
+  if (!data || !data.length) return null
+
   return (
     <div className="container">
       <div className="logo">
         <img src="/static/images/super-shoes.png" alt="logo"/>
       </div>
       <div className="carrossel">
-        <div className="item">
-          <div className="image">
-            <img src="https://imgcentauro-a.akamaihd.net/230x230/94313731.jpg" alt="shoe"/>
-          </div>
-          <div className="info">
-            <span className="name">Super Shoes 1</span>
-            <span className="oldPrice">U$ 599,00</span>
-            <span className="price">U$ 199,00</span>
-          </div>
-        </div>
+        {data.map((item) => {
+          const {id, name, price, oldPrice, image } = item
+          return(
+            <div className="item" key={id}>
+              <div className="image">
+                <img src={image} alt={name}/>
+              </div>
+              <div className="info">
+                <span className="name">{name}</span>
+                <span className="oldPrice">U$ {oldPrice}</span>
+                <span className="price">U$ {price}</span>
+              </div>
+            </div>
+          )
+        })}
       </div>
     </div>
   );
